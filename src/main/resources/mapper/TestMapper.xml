@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloud.search.salarymanagementsystem.mapper.TestMapper">
+    <resultMap id="resultTest" type="com.cloud.search.salarymanagementsystem.domain.Test">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <select id="findTest" parameterType="map" resultMap="resultTest">
+        select * from test
+        <where>
+            <if test="name != null and name != '12'.toString">
+                name = #{name}
+            </if>
+        </where>
+    </select>
+
+</mapper>
