@@ -30,13 +30,16 @@ public class MysqlConfiguration {
     }
 
 
-    @Bean
+    @Bean(initMethod = "init")
     public DataSource getDataSource(Map<String, String> salary) {
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setDriverClassName(salary.get("driver.className"));
         druidDataSource.setUrl(salary.get("url"));
         druidDataSource.setUsername(salary.get("userName"));
         druidDataSource.setPassword(salary.get("password"));
+        druidDataSource.setValidationQuery("SELECT 1 FROM DUAL");
+        druidDataSource.setMaxWait(3000);
+        druidDataSource.setBreakAfterAcquireFailure(true);
         return druidDataSource;
     }
 

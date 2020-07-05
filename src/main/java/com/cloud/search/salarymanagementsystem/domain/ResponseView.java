@@ -35,4 +35,11 @@ public class ResponseView<T> {
         return responseView;
     }
 
+    public static ResponseView buildError(ResponseEnum responseEnum) {
+        ResponseView responseView = new ResponseView();
+        responseView.setCode(responseEnum.getCode());
+        responseView.setMsg(responseEnum.getMsg());
+        return responseView;
+    }
+
 }
