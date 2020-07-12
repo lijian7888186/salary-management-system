@@ -33,7 +33,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             boolean loginUrl = isLoginUrl(request);
             Cookie[] cookies = request.getCookies();
-            boolean flag = false;
             if (Objects.isNull(cookies)) {
                 returnToLogin(response);
                 return false;

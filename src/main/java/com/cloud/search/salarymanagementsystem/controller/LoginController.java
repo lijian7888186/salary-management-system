@@ -1,5 +1,6 @@
 package com.cloud.search.salarymanagementsystem.controller;
 
+import com.cloud.search.salarymanagementsystem.annotation.Permission;
 import com.cloud.search.salarymanagementsystem.domain.ResponseView;
 import com.cloud.search.salarymanagementsystem.domain.views.LoginUser;
 import io.swagger.annotations.Api;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("login")
 @Api(tags = "登陆接口")
+@Permission
 public class LoginController {
     @PostMapping("toLogin")
     @ApiOperation(value = "登陆")
