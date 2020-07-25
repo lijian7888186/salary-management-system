@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloud.search.salarymanagementsystem.mapper.SalaryManagerMapper">
+    <select id="findByPage" resultType="com.cloud.search.salarymanagementsystem.domain.views.SalaryManagerView">
+        select salary.id,salary.salary,salary.dt,salary.salary_config_id as salaryConfigId,
+        salary.custom_salary_config_id as customSalaryConfigId,
+        u.id as userId,u.user_name as userName,
+        d.id as deptId,d.dept_name as deptName
+        from salary_manager salary join user u on salary.user_id = u.id
+        join dept d on salary.dept_id = d.id
+        where salary.yn = 1 and u.yn = 1 and d.yn = 1
+        <if test="userId != null">
+            and u.id = #{userId}
+        </if>
+        <if test="deptId != null">
+            and d.id = #{deptId}
+        </if>
+        <if test="dt != null">
+            and salary.dt = #{dt}
+        </if>
+    </select>
+
+</mapper>

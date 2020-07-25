@@ -3,7 +3,7 @@
   <el-form class="login-container" label-position="left" label-width="0px">
     <h3 class="login_title">系统登录</h3>
     <el-form-item>
-      <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="账号"></el-input>
+      <el-input type="text" v-model="loginForm.userName" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
 
     <el-form-item>
@@ -19,27 +19,38 @@
 
 
 <script>
-  import {toLogin} from "@/service/login";
+  import {toLogin, checkLogin} from "@/service/login";
 
   export default {
     name: "LoginVue",
     data() {
       return {
         loginForm: {
-          username: '',
+          userName: '',
           password: ''
         },
         responseResult: []
       }
     },
+    beforeCreate() {
+      checkLogin();
+    },
+    created() {
+
+    },
+    mounted() {
+
+    },
     methods: {
       login() {
         return new Promise(resolve => {
           toLogin({
-            username: this.loginForm.username,
+            userName: this.loginForm.userName,
             password: this.loginForm.password
           }).then((data) => {
-            this.$router.replace({path: '/test'});
+            if (data.code == 200) {
+              this.$router.replace({path: '/index'});
+            }
           });
         });
 

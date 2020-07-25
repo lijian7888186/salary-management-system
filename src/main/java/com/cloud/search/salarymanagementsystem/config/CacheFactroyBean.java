@@ -1,6 +1,7 @@
 package com.cloud.search.salarymanagementsystem.config;
 
 import org.ehcache.Cache;
+import org.ehcache.CacheManager;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.stereotype.Component;
@@ -11,18 +12,18 @@ import org.springframework.stereotype.Component;
  * @desc
  */
 @Component
-public class CacheFactroyBean implements FactoryBean<Cache>, DisposableBean {
+public class CacheFactroyBean implements FactoryBean<CacheManager>, DisposableBean {
     private CacheFactory factory;
     @Override
-    public Cache getObject() throws Exception {
+    public CacheManager getObject() throws Exception {
         factory = new CacheFactory();
         factory.init();
-        return factory.cache;
+        return factory.cacheManager;
     }
 
     @Override
     public Class<?> getObjectType() {
-        return Cache.class;
+        return CacheManager.class;
     }
 
     @Override

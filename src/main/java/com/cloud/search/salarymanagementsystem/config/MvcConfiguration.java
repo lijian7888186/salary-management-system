@@ -1,5 +1,6 @@
 package com.cloud.search.salarymanagementsystem.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -13,7 +14,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new LoginInterceptor());
-        registry.addInterceptor(new PermissionInterceptor());
+        registry.addInterceptor(getLoginInterceptor());
+        registry.addInterceptor(getPermissionInterceptor());
+    }
+
+    @Bean
+    public LoginInterceptor getLoginInterceptor() {
+        return new LoginInterceptor();
+    }
+    @Bean
+    public PermissionInterceptor getPermissionInterceptor() {
+        return new PermissionInterceptor();
     }
 }

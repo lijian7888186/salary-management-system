@@ -4,11 +4,13 @@ import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.time.Duration;
 
 /**
  * @author lijian
@@ -17,22 +19,20 @@ import javax.annotation.PreDestroy;
  */
 public class CacheFactory {
 
-    public Cache<String, String> cache;
-
-    private CacheManager cacheManager;
+    public CacheManager cacheManager;
 
     public void init() {
         System.out.println("init");
         cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
                 .withCache("loginCache",
-                        CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, String.class, ResourcePoolsBuilder.heap(10)))
+                        CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, String.class,
+                                ResourcePoolsBuilder.heap(10))
+                                .withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofMinutes(30))))
                 .build();
         cacheManager.init();
-        cache = cacheManager.getCache("loginCache", String.class, String.class);
     }
 
     public void close() {
-        cache.clear();
         cacheManager.close();
         System.out.println("PreDestroy");
     }

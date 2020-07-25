@@ -3,10 +3,14 @@ package com.cloud.search.salarymanagementsystem.config;
 import com.alibaba.fastjson.JSON;
 import com.cloud.search.salarymanagementsystem.domain.ResponseView;
 import com.cloud.search.salarymanagementsystem.enums.ResponseEnum;
+import com.cloud.search.salarymanagementsystem.service.UserService;
+import com.cloud.search.salarymanagementsystem.utils.CacheUtil;
 import com.cloud.search.salarymanagementsystem.utils.Consts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -26,12 +30,22 @@ import java.util.Objects;
  */
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
+
     @Resource
-    public Cache<String, String> cache;
+    public UserService userService;
+
+    private static String[] excludeUrl = {"swagger-resources"};
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             boolean loginUrl = isLoginUrl(request);
+            if (loginUrl) {
+                return true;
+            }
+            if (checkExcludeUrl(request)) {
+                return true;
+            }
             Cookie[] cookies = request.getCookies();
             if (Objects.isNull(cookies)) {
                 returnToLogin(response);
@@ -40,29 +54,59 @@ public class LoginInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (Consts.LOING_COOKIE_NAMW.equals(cookie.getName())) {
                     String value = cookie.getValue();
-                    String s = cache.get(value);
-                    if (StringUtils.isBlank(s)) {
-                        if (loginUrl) {
-                            return true;
-                        } else {
-                            returnToLogin(response);
-                            return false;
-                        }
-                    } else {
-                        return true;
-                    }
-                } else {
-                    if (request.getRequestURL().toString().endsWith("toLogin")) {
-                        return true;
-                    } else {
+                    Cache<String, String> cache = CacheUtil.getStringCache(value);
+                    if (Objects.isNull(cache)) {
                         returnToLogin(response);
                         return false;
                     }
+                    String userName = cache.get(Consts.USER_NAME);
+                    String id = cache.get(Consts.USER_ID);
+                    if (Objects.isNull(userName) || Objects.isNull(id)) {
+                        returnToLogin(response);
+                        CacheUtil.deleteCache(value);
+                        return false;
+                    }
+                    Cache<String, String> stringCache = CacheUtil.getStringCache(Consts.UPDATE_PASSWORD);
+                    if (stringCache != null) {
+                        String string = stringCache.get(id);
+                        if (string != null) {
+                            returnToLogin(response);
+                            CacheUtil.deleteCache(value);
+                            stringCache.remove(id);
+                            return false;
+                        }
+                    }
+                    UserInfo userInfo = new UserInfo();
+                    userInfo.setUserName(userName);
+                    userInfo.setUserId(Long.valueOf(id));
+                    userInfo.setCookieName(value);
+                    userService.assignmentUser(userInfo);
+                    UserInfoContext.setUserInfo(userInfo);
+                    return true;
                 }
             }
+            returnToLogin(response);
+            return false;
         }
         return true;
     }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        log.info("reomve user info");
+        UserInfoContext.remove();
+    }
+
+    private boolean checkExcludeUrl(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        for (String url : excludeUrl) {
+            if (requestURI.contains(url)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private boolean isLoginUrl(HttpServletRequest request) {
         if (request.getRequestURL().toString().endsWith("toLogin")) {

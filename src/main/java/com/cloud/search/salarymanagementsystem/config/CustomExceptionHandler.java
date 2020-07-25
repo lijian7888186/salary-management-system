@@ -1,5 +1,7 @@
 package com.cloud.search.salarymanagementsystem.config;
 
+import com.cloud.search.salarymanagementsystem.domain.ResponseView;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -10,12 +12,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @desc
  */
 @ControllerAdvice
-public class TestExceptionHandler {
+@Slf4j
+public class CustomExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Object handlerException(Exception e) {
-        System.out.println("test exception");
-        e.printStackTrace();
-        return "error";
+        log.error("ExceptionHandler error", e);
+        ResponseView responseView = ResponseView.buildError(e.getMessage());
+        return responseView;
     }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloud.search.salarymanagementsystem.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.cloud.search.salarymanagementsystem.domain.User">
+        <id column="id" property="id"/>
+        <result column="user_name" property="userName"/>
+        <result column="passwrod" property="passwrod"/>
+        <result column="phone" property="phone"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="yn" property="yn"/>
+    </resultMap>
+    <select id="findList" resultMap="BaseResultMap">
+        select * from user
+        where yn = 1
+        and id in
+        <foreach collection="userIdList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

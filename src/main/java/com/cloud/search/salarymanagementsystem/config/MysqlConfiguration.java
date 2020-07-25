@@ -44,8 +44,7 @@ public class MysqlConfiguration {
     }
 
     @Bean
-    public PlatformTransactionManager getManager(DataSource dataSource, Cache cache) {
-        System.out.println(cache);
+    public PlatformTransactionManager getManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 }

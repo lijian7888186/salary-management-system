@@ -13,6 +13,7 @@ public class ResponseView<T> {
     private Integer code;
     private String msg;
     private T data;
+    private Long total;
 
     public static ResponseView buildSuccess() {
         ResponseView responseView = new ResponseView();
@@ -41,5 +42,4 @@ public class ResponseView<T> {
         responseView.setMsg(responseEnum.getMsg());
         return responseView;
     }
-
 }

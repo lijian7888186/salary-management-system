@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
  */
 @Aspect
 @Component
-public class TestAopConfiguration {
-    @Pointcut("execution(* com.example.spring.example.service.*.*(..))")
-    public void test(){
+public class AopConfiguration {
+    @Pointcut("execution(* com.cloud.search.salarymanagementsystem.service.*.*(..))")
+    public void pointcut(){
 
     }
 
-    @Before("test()")
+    @Before("pointcut()")
     public void test1() {
         System.out.println("test----------------");
     }

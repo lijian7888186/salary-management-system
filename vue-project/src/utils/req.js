@@ -1,11 +1,32 @@
 import axios from 'axios'
 import {Message} from 'element-ui';
+import Router from '@/router/index';
+import qs from 'qs'
 
 const CONTENT_TYPES = {
   1: 'application/json',
   2: 'multipart/form-data',
   3: 'application/x-www-form-urlencoded'
 };
+const checkLoginUrl = "/login/checkLogin";
+
+export function checkLoginAjax() {
+  axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? '/api' : '';
+  let method = 'post';
+  let param = {
+    url: '/login/checkLogin',
+    method: 'post',
+    headers: {
+      'Content-type': CONTENT_TYPES['3']
+    }
+  };
+  axios(param).then(function ({data}) {
+    console.log(data);
+    if (data.code == 200) {
+      Router.replace({path: '/index'});
+    }
+  })
+}
 
 // 缓存正在请求的ajax
 const pendings = [];
@@ -34,15 +55,23 @@ export function ajax({method = 'post', url, data, cType = 1, responseType = ''})
     opts.params = data
   } else {
     opts.data = data
+    if (cType == 3) {
+      opts.data = qs.stringify(data);
+    }
   }
   return axios(opts).then(function ({data}) {
     console.log(data);
     if (data.code != 200) {
-      Message({
-        message: data.msg || 'Error',
-        type: 'error',
-        duration: 1000
-      })
+      if (data.code == 401) {
+        Router.replace({path: '/login'});
+      } else {
+        Message({
+          message: data.msg || 'Error',
+          type: 'error',
+          duration: 1000,
+          customClass:'zZindex'
+        })
+      }
     }
     return data
   }).catch(function (error) {

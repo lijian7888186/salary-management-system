@@ -1,9 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
-import test from '@/components/test'
-import test1 from '@/components/test1'
-import test2 from '@/components/test2'
+import Index from '@/components/LeftPage'
+import Right from '@/components/RightPage'
+import User from '@/components/UserPage'
+import Dept from '@/components/DeptPage'
+import Role from '@/components/RolePage'
+import UserRole from '@/components/UserRolePage'
+import Permission from '@/components/PermissionPage'
+import RolePermission from '@/components/RolePermissionPage'
+import SalaryManager from '@/components/SalaryManagerPage'
+import SalaryConfig from '@/components/SalaryConfigPage'
+import CustomSalaryConfig from '@/components/CustomSalaryConfigPage'
 
 Vue.use(Router)
 
@@ -11,23 +19,61 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'Index',
+      redirect: '/choosePage',
+      component: Index
+    },
+    {
+      path: '/login',
       name: 'Login',
       component: Login
     },
     {
-      path: '/test',
-      name: 'test',
-      redirect: '/test2',
-      component: test,
+      path: '/index',
+      name: 'LeftPage',
+      redirect: '/choosePage',
+      component: Index,
       children: [
         {
-          path: '/test1',
-          component: test1
+          path: '/choosePage',
+          component: Right
 
         },
         {
-          path: '/test2',
-          component: test2
+          path: '/user',
+          component: User
+        },
+        {
+          path: '/dept',
+          component: Dept
+        },
+        {
+          path: '/role',
+          component: Role
+        },
+        {
+          path: '/userRole',
+          component: UserRole
+        },
+        {
+          path: '/permission',
+          component: Permission
+        },
+        {
+          path: '/rolePermission',
+          component: RolePermission
+        },
+        {
+          path: '/salaryManager',
+          component: SalaryManager
+        },
+        {
+          path: '/salaryConfig',
+          component: SalaryConfig
+        },
+        {
+          path: '/customSalaryConfig',
+          component: CustomSalaryConfig
         }
         ]
     }

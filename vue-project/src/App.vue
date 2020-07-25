@@ -20,4 +20,7 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+.zZindex {
+  z-index:3000 !important;
+}
 </style>
