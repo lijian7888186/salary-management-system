@@ -23,4 +23,6 @@ public interface RolePermissionService {
 
     boolean checkPermission(String url);
 
+    void addRoleAllPermission();
+
 }

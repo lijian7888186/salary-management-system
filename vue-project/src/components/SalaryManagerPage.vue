@@ -24,11 +24,13 @@
         </el-form-item>
       </el-form>
       <el-table :data="tableData">
-        <el-table-column prop="url" label="用户名称" width="200">
+        <el-table-column prop="userName" label="用户名称" width="200">
         </el-table-column>
-        <el-table-column prop="url" label="部门名称" width="200">
+        <el-table-column prop="deptName" label="部门名称" width="200">
         </el-table-column>
-        <el-table-column prop="name" label="工资">
+        <el-table-column prop="dt" label="日期">
+        </el-table-column>
+        <el-table-column prop="salary" label="工资">
         </el-table-column>
       </el-table>
     </el-main>

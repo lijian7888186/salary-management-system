@@ -57,4 +57,6 @@ public class User implements Serializable {
     */
     private Integer yn;
 
+    private String nickname;
+
 }

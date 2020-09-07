@@ -4,6 +4,7 @@ import com.cloud.search.salarymanagementsystem.annotation.Permission;
 import com.cloud.search.salarymanagementsystem.domain.ResponseView;
 import com.cloud.search.salarymanagementsystem.domain.views.OptionView;
 import com.cloud.search.salarymanagementsystem.enums.UserLevelEnum;
+import com.cloud.search.salarymanagementsystem.service.RolePermissionService;
 import com.cloud.search.salarymanagementsystem.service.SalaryManagerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,8 @@ import java.util.List;
 public class CommonController {
     @Resource
     private SalaryManagerService salaryManagerService;
+    @Resource
+    private RolePermissionService rolePermissionService;
     @PostMapping("findUserLevelList")
     @ApiOperation(value = "查找用户职位列表")
     public ResponseView findUserLevelList() {
@@ -60,6 +63,13 @@ public class CommonController {
     public ResponseView addSalary(String dt) {
         ResponseView responseView = salaryManagerService.addSalary(dt);
         return responseView;
+    }
+
+    @PostMapping("addUser")
+    @ApiOperation(value = "添加用户权限")
+    public ResponseView addUser() {
+        rolePermissionService.addRoleAllPermission();
+        return ResponseView.buildSuccess();
     }
 
 }

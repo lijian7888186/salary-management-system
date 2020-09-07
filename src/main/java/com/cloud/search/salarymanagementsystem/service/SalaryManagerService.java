@@ -11,4 +11,5 @@ import com.cloud.search.salarymanagementsystem.domain.views.SalaryManagerPagePar
 public interface SalaryManagerService {
     ResponseView findByPage(SalaryManagerPageParam salaryManagerPageParam);
     ResponseView addSalary(String dt);
+    ResponseView findUserSalary();
 }

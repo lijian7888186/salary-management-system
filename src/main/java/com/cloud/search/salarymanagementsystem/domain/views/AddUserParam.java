@@ -19,4 +19,6 @@ public class AddUserParam {
     private Long deptId;
     @NotNull
     private Integer level;
+    @NotNull
+    private String nickname;
 }

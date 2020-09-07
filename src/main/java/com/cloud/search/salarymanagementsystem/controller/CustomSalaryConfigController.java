@@ -46,7 +46,7 @@ public class CustomSalaryConfigController {
     }
 
     @PostMapping("deleteConfig")
-    @ApiOperation(value = "添加配置")
+    @ApiOperation(value = "删除配置")
     public ResponseView deleteConfig(@RequestBody @Validated(DeleteGroups.class)SalaryConfigParam salaryConfigParam) {
         customSalaryConfigService.deleteConfig(salaryConfigParam);
         return ResponseView.buildSuccess();

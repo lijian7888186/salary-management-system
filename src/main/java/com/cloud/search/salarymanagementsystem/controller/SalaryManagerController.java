@@ -34,4 +34,12 @@ public class SalaryManagerController {
         ResponseView responseView = salaryManagerService.findByPage(salaryManagerPageParam);
         return responseView;
     }
+
+    @PostMapping("findUserSalary")
+    @ApiOperation(value = "查询用户工资")
+    public ResponseView findUserSalary() {
+        ResponseView responseView = salaryManagerService.findUserSalary();
+        return responseView;
+    }
+
 }

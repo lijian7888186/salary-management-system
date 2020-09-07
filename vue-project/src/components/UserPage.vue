@@ -11,6 +11,8 @@
       <el-table :data="tableData">
         <el-table-column prop="userName" label="用户名" width="200">
         </el-table-column>
+        <el-table-column prop="nickname" label="昵称" width="200">
+        </el-table-column>
         <el-table-column prop="phone" label="手机号" width="150">
         </el-table-column>
         <el-table-column prop="createTime" label="入职日期">
@@ -38,10 +40,13 @@
     <el-dialog title="新增用户" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="用户名称" :label-width="formLabelWidth">
-          <el-input v-model="form.userName" autocomplete="off"></el-input>
+          <el-input v-model="form.userName" placeholder="输入用户名" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="昵称" :label-width="formLabelWidth">
+          <el-input v-model="form.nickname" placeholder="输入昵称" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号" :label-width="formLabelWidth">
-          <el-input v-model="form.phone" autocomplete="off"></el-input>
+          <el-input v-model="form.phone" placeholder="输入手机号" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="所属部门" :label-width="formLabelWidth">
           <el-select v-model="form.deptId" style="width: 100%" placeholder="请选择所属部门">
@@ -72,6 +77,9 @@
 
     <el-dialog title="修改/编辑用户" :visible.sync="dialogEditVisible">
       <el-form :model="editForm">
+        <el-form-item label="昵称" :label-width="formLabelWidth">
+          <el-input v-model="editForm.nickname" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="手机号" :label-width="formLabelWidth">
           <el-input v-model="editForm.phone" autocomplete="off"></el-input>
         </el-form-item>
@@ -138,14 +146,16 @@
           userName: '',
           phone: '',
           deptId: '',
-          level: ''
+          level: '',
+          nickname: ''
         },
         editForm: {
           id:'',
           userName: '',
           phone: '',
           deptId: '',
-          level: ''
+          level: '',
+          nickname: ''
         },
         passwordForm: {
           id:'',
@@ -224,6 +234,7 @@
             this.editForm = data.data;
             this.editForm.deptId=data.data.deptId;
             this.editForm.level=data.data.level;
+            this.editForm.nickname=data.data.nickname;
           });
           this.handleEditClick();
 

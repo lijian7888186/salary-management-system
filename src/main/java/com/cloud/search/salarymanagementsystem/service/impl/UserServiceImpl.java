@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -86,6 +87,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addUser(AddUserParam addUserParam) {
+        User addUser = new User();
+        String userName = addUserParam.getUserName();
+        addUser.setYn(1);
+        addUser.setUserName(userName);
+        int count = userMapper.selectCount(addUser);
+        if (count > 0) {
+            throw new RuntimeException("用户名不能重复");
+        }
         User user = new User();
         user.setUserName(addUserParam.getUserName());
         user.setPhone(addUserParam.getPhone());
@@ -95,6 +104,7 @@ public class UserServiceImpl implements UserService {
             log.error("addUser error", e);
             throw new RuntimeException("系统错误");
         }
+        user.setNickname(addUserParam.getNickname());
         userMapper.insertSelective(user);
         DeptUser deptUser = new DeptUser();
         deptUser.setUserId(user.getId());
@@ -129,6 +139,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setId(updateUserParam.getId());
         user.setPhone(updateUserParam.getPhone());
+        user.setNickname(updateUserParam.getNickname());
         userMapper.updateByPrimaryKeySelective(user);
         if (list.get(0).getDetpId().equals(updateUserParam.getDeptId()) && list.get(0).getUserLevel().equals(updateUserParam.getLevel())) {
             return;

@@ -4,6 +4,7 @@ import com.cloud.search.salarymanagementsystem.config.UserInfo;
 import com.cloud.search.salarymanagementsystem.config.UserInfoContext;
 import com.cloud.search.salarymanagementsystem.domain.*;
 import com.cloud.search.salarymanagementsystem.domain.views.SalaryManagerPageParam;
+import com.cloud.search.salarymanagementsystem.domain.views.UserSalaryView;
 import com.cloud.search.salarymanagementsystem.enums.UserLevelEnum;
 import com.cloud.search.salarymanagementsystem.mapper.*;
 import com.cloud.search.salarymanagementsystem.service.CustomSalaryConfigService;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author lijian
@@ -140,5 +142,26 @@ public class SalaryManagerServiceImpl implements SalaryManagerService {
             salaryManagerMapper.insertSelective(manager);
         });
         return ResponseView.buildSuccess();
+    }
+
+    @Override
+    public ResponseView findUserSalary() {
+        UserInfo userInfo = UserInfoContext.getUserInfo();
+        SalaryManager salaryManager = new SalaryManager();
+        salaryManager.setYn(1);
+        salaryManager.setUserId(userInfo.getUserId());
+        PageHelper.startPage(1, 12, "dt,id desc");
+        List<SalaryManager> list = salaryManagerMapper.select(salaryManager);
+        if (CollectionUtils.isEmpty(list)) {
+            return ResponseView.buildError("没有数据");
+        }
+        List<UserSalaryView> collect = list.stream().map(view -> {
+            UserSalaryView salaryView = new UserSalaryView();
+            salaryView.setSalary(view.getSalary());
+            salaryView.setDt(view.getDt());
+            return salaryView;
+        }).collect(Collectors.toList());
+        ResponseView responseView = ResponseView.buildSuccess(collect);
+        return responseView;
     }
 }

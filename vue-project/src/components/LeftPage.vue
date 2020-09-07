@@ -16,7 +16,7 @@
         <el-menu :default-openeds="['1', '2', '3', '4', '5']">
           <el-submenu index="1">
             <template slot="title"><i class="el-icon-message"></i>用户管理</template>
-            <el-menu-item index="1-1"><router-link to="/user">员工列表</router-link></el-menu-item>
+            <el-menu-item index="1-1"><router-link to="/user">用户列表</router-link></el-menu-item>
             <el-menu-item index="1-2"><router-link to="/dept">部门列表</router-link></el-menu-item>
           </el-submenu>
           <el-submenu index="2">
@@ -32,6 +32,7 @@
           <el-submenu index="4">
             <template slot="title"><i class="el-icon-menu"></i>工资管理</template>
             <el-menu-item index="4-1"><router-link to="/salaryManager">工资列表</router-link></el-menu-item>
+            <el-menu-item index="4-1"><router-link to="/salaryChart">工资图表</router-link></el-menu-item>
           </el-submenu>
           <el-submenu index="5">
             <template slot="title"><i class="el-icon-menu"></i>工资配置</template>

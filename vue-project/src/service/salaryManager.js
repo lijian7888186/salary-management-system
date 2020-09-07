@@ -17,3 +17,12 @@ export function findDtList(data) {
     cType: 3
   })
 }
+
+export function findUserSalary(data) {
+  return ajax({
+    url: '/salaryManager/findUserSalary',
+    method: 'post',
+    data,
+    cType: 1
+  })
+}

@@ -104,4 +104,15 @@ public class RolePermissionServiceImpl implements RolePermissionService {
         }
         return false;
     }
+
+    @Override
+    public void addRoleAllPermission() {
+        List<PermissionUrlInfo> infos = PermissionConfiguration.INFOS;
+        infos.forEach(view -> {
+            RolePermission rolePermission = new RolePermission();
+            rolePermission.setRoleId(1L);
+            rolePermission.setPermissionUrl(view.getUrl());
+            rolePermissionMapper.insertSelective(rolePermission);
+        });
+    }
 }

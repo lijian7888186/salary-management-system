@@ -23,4 +23,6 @@ public class UpdateUserParam {
     private Integer level;
     @NotNull(groups = PasswordGroups.class)
     private String password;
+    @NotNull(groups = UpdateGroups.class)
+    private String nickname;
 }

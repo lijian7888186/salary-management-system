@@ -10,6 +10,7 @@ import UserRole from '@/components/UserRolePage'
 import Permission from '@/components/PermissionPage'
 import RolePermission from '@/components/RolePermissionPage'
 import SalaryManager from '@/components/SalaryManagerPage'
+import SalaryChart from '@/components/SalaryChartPage'
 import SalaryConfig from '@/components/SalaryConfigPage'
 import CustomSalaryConfig from '@/components/CustomSalaryConfigPage'
 
@@ -66,6 +67,10 @@ export default new Router({
         {
           path: '/salaryManager',
           component: SalaryManager
+        },
+        {
+          path: '/salaryChart',
+          component: SalaryChart
         },
         {
           path: '/salaryConfig',
