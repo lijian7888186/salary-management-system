@@ -141,6 +141,9 @@ public class UserServiceImpl implements UserService {
         user.setPhone(updateUserParam.getPhone());
         user.setNickname(updateUserParam.getNickname());
         userMapper.updateByPrimaryKeySelective(user);
+        if (list.get(0).getUserLevel().equals(1)) {
+            return;
+        }
         if (list.get(0).getDetpId().equals(updateUserParam.getDeptId()) && list.get(0).getUserLevel().equals(updateUserParam.getLevel())) {
             return;
         }
@@ -178,6 +181,7 @@ public class UserServiceImpl implements UserService {
         info.setDeptId(list.get(0).getDetpId());
         info.setLevel(list.get(0).getUserLevel());
         info.setPhone(select.get(0).getPhone());
+        info.setNickname(select.get(0).getNickname());
         return info;
     }
 }

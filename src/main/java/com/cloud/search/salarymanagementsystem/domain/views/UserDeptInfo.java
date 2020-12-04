@@ -13,4 +13,5 @@ public class UserDeptInfo {
     private Long deptId;
     private String phone;
     private Integer level;
+    private String nickname;
 }

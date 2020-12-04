@@ -56,6 +56,9 @@ public class UserController {
         if (userInfo.getUserId().equals(updateUserParam.getId())) {
             return ResponseView.buildError("不能删除自己的账号信息");
         }
+        if (userInfo.getUserId().equals(Integer.valueOf(1))) {
+            return ResponseView.buildError("不能删除管理员账号");
+        }
         userService.deleteUser(updateUserParam);
         return ResponseView.buildSuccess();
     }
