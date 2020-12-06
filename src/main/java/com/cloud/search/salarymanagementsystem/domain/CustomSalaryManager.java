@@ -9,14 +9,13 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Date;
 
 /**
-* 薪资表配置表
+* 自定义用户薪资表
 * @author 
 */
 @Data
-public class SalaryConfig implements Serializable {
+public class CustomSalaryManager implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,19 +27,24 @@ public class SalaryConfig implements Serializable {
     private Long id;
 
     /**
-     * 用户id
-     */
-    private Long user_id;
+    * 用户id
+    */
+    private Long userId;
 
     /**
-    * 基本工资
+     * 自定义工资配置id
+     */
+    private Long customSalaryConfigId;
+
+    /**
+    * 自定义工资(有自定义工资以自定义工资为准)
     */
-    private BigDecimal baseSalary;
+    private BigDecimal customSalary;
 
     /**
      * 工资说明
      */
-    private String name;
+    private String remark;
 
     /**
     * 添加时间
@@ -54,8 +58,14 @@ public class SalaryConfig implements Serializable {
     private Date updateTime;
 
     /**
+     * 日期
+     */
+    private String dt;
+
+    /**
     * 是否有效
     */
     private Integer yn;
+
 
 }

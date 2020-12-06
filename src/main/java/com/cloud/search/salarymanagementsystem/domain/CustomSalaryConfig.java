@@ -28,24 +28,14 @@ public class CustomSalaryConfig implements Serializable {
     private Long id;
 
     /**
-    * 用户id
+    * 自定义工资名称
     */
-    private Long userId;
+    private String customSalaryName;
 
     /**
-    * 部门id
-    */
-    private Long deptId;
-
-    /**
-    * 自定义工资(有自定义工资以自定义工资为准)
-    */
-    private BigDecimal customSalary;
-
-    /**
-     * 工资说明
+     * 工资配置说明
      */
-    private String name;
+    private String remark;
 
     /**
     * 添加时间
