@@ -6,6 +6,7 @@ import com.cloud.search.salarymanagementsystem.domain.InsertGroups;
 import com.cloud.search.salarymanagementsystem.domain.ResponseView;
 import com.cloud.search.salarymanagementsystem.domain.views.SalaryConfigPageParam;
 import com.cloud.search.salarymanagementsystem.domain.views.SalaryConfigParam;
+import com.cloud.search.salarymanagementsystem.domain.views.UserCustomSalaryParam;
 import com.cloud.search.salarymanagementsystem.service.CustomSalaryConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,5 +51,26 @@ public class CustomSalaryConfigController {
     public ResponseView deleteConfig(@RequestBody @Validated(DeleteGroups.class)SalaryConfigParam salaryConfigParam) {
         customSalaryConfigService.deleteConfig(salaryConfigParam);
         return ResponseView.buildSuccess();
+    }
+
+    @PostMapping("addUserCustomSalary")
+    @ApiOperation(value = "增加用户自定义工资")
+    public ResponseView addUserCustomSalary(@RequestBody @Validated(InsertGroups.class) UserCustomSalaryParam userCustomSalaryParam) {
+        customSalaryConfigService.addUserCustomSalary(userCustomSalaryParam);
+        return ResponseView.buildSuccess();
+    }
+
+    @PostMapping("deleteUserCustomSalary")
+    @ApiOperation(value = "删除用户自定义工资")
+    public ResponseView deleteUserCustomSalary(@RequestBody @Validated(DeleteGroups.class) UserCustomSalaryParam userCustomSalaryParam) {
+        customSalaryConfigService.deleteUserCustomSalary(userCustomSalaryParam);
+        return ResponseView.buildSuccess();
+    }
+
+    @PostMapping("findUserCustomSalaryList")
+    @ApiOperation(value = "查看用户自定义工资列表")
+    public ResponseView findUserCustomSalaryList(@RequestBody @Validated(DeleteGroups.class) UserCustomSalaryParam userCustomSalaryParam) {
+        ResponseView responseView = customSalaryConfigService.findUserCustomSalaryList(userCustomSalaryParam);
+        return responseView;
     }
 }

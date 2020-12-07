@@ -4,6 +4,7 @@ import com.cloud.search.salarymanagementsystem.config.UserInfo;
 import com.cloud.search.salarymanagementsystem.config.UserInfoContext;
 import com.cloud.search.salarymanagementsystem.domain.*;
 import com.cloud.search.salarymanagementsystem.domain.views.SalaryManagerPageParam;
+import com.cloud.search.salarymanagementsystem.domain.views.UserCustomSalaryView;
 import com.cloud.search.salarymanagementsystem.domain.views.UserSalaryView;
 import com.cloud.search.salarymanagementsystem.enums.UserLevelEnum;
 import com.cloud.search.salarymanagementsystem.mapper.*;
@@ -21,6 +22,8 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.*;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +45,9 @@ public class SalaryManagerServiceImpl implements SalaryManagerService {
     private SalaryConfigMapper salaryConfigMapper;
     @Resource
     private CustomSalaryConfigMapper customSalaryConfigMapper;
+
+    @Resource
+    private CustomSalaryMapper customSalaryMapper;
 
     @Override
     public ResponseView findByPage(SalaryManagerPageParam salaryManagerPageParam) {
@@ -81,9 +87,8 @@ public class SalaryManagerServiceImpl implements SalaryManagerService {
 
     @Override
     public ResponseView addSalary(String dt) {
-        String[] arr = {"1.0", "1.1", "1.2", "1.5", "1.6", "1.65", "1.7", "1.75", "2.0"};
         if (StringUtils.isBlank(dt)) {
-            dt = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()).toString();
+            dt = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()).minusMonths(1).toString();
         }
         SalaryManager salaryManager = new SalaryManager();
         salaryManager.setYn(1);
@@ -92,53 +97,32 @@ public class SalaryManagerServiceImpl implements SalaryManagerService {
         if (count > 0) {
             return ResponseView.buildSuccess();
         }
-        PageHelper.startPage(1, 1, "id desc");
-        SalaryConfig salaryConfig = new SalaryConfig();
-        salaryConfig.setYn(1);
-        List<SalaryConfig> salaryConfigs = salaryConfigMapper.select(salaryConfig);
-        SalaryConfig baseConfig = salaryConfigs.get(0);
         DeptUser deptUser = new DeptUser();
         deptUser.setYn(1);
         List<DeptUser> deptUsers = deptUserMapper.select(deptUser);
         String managerDt = dt;
         deptUsers.forEach(view -> {
-            int year = LocalDate.now().getYear();
-            Instant instant = view.getCreateTime().toInstant();
-            ZoneId zoneId = ZoneId.systemDefault();
-            LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
-            int createYear = localDateTime.getYear();
-            int i = year - createYear;
-            BigDecimal bigDecimal = new BigDecimal(arr[i > arr.length ? arr.length : i]);
-            CustomSalaryConfig config = new CustomSalaryConfig();
-            config.setYn(1);
-            config.setUserId(view.getUserId());
-            List<CustomSalaryConfig> userConfigs = customSalaryConfigMapper.select(config);
-            BigDecimal salary = null;
+            PageHelper.startPage(1, 1, "id desc");
+            SalaryConfig salaryConfig = new SalaryConfig();
+            salaryConfig.setYn(1);
+            salaryConfig.setUser_id(view.getUserId());
+            List<SalaryConfig> salaryConfigs = salaryConfigMapper.select(salaryConfig);
+            SalaryConfig baseConfig = salaryConfigs.get(0);
+            BigDecimal bigDecimal = baseConfig.getBaseSalary();
+            CustomSalaryManager customSalaryManager = new CustomSalaryManager();
+            customSalaryManager.setUserId(view.getUserId());
+            customSalaryManager.setDt(managerDt);
+            List<CustomSalaryManager> managers = customSalaryMapper.select(customSalaryManager);
+            for (CustomSalaryManager manager : managers) {
+                bigDecimal = bigDecimal.add(manager.getCustomSalary());
+            }
             SalaryManager manager = new SalaryManager();
             manager.setUserId(view.getUserId());
             manager.setDeptId(view.getDetpId());
             manager.setDt(managerDt);
             manager.setSalaryConfigId(baseConfig.getId());
-            if (!CollectionUtils.isEmpty(userConfigs)) {
-                CustomSalaryConfig userConfig = userConfigs.get(userConfigs.size() - 1);
-                salary = bigDecimal.multiply(userConfig.getCustomSalary()).setScale(0, BigDecimal.ROUND_HALF_UP);
-                manager.setCustomSalaryConfigId(userConfig.getId());
-            } else {
-                config.setUserId(null);
-                config.setDeptId(view.getDetpId());
-                List<CustomSalaryConfig> deptConfigs = customSalaryConfigMapper.select(config);
-                if (!CollectionUtils.isEmpty(deptConfigs)) {
-                    CustomSalaryConfig deptConfig = deptConfigs.get(deptConfigs.size() - 1);
-                    salary = bigDecimal.multiply(deptConfig.getCustomSalary()).setScale(0, BigDecimal.ROUND_HALF_UP);
-                    manager.setCustomSalaryConfigId(deptConfig.getId());
-                }
-            }
-            if (salary != null) {
-                salary = salary.add(bigDecimal.multiply(baseConfig.getBaseSalary()).setScale(0, BigDecimal.ROUND_HALF_UP));
-            } else {
-                salary = bigDecimal.multiply(baseConfig.getBaseSalary()).setScale(0, BigDecimal.ROUND_HALF_UP);
-            }
-            manager.setSalary(salary);
+            manager.setSalary(bigDecimal);
+            manager.setYn(1);
             salaryManagerMapper.insertSelective(manager);
         });
         return ResponseView.buildSuccess();
@@ -162,6 +146,43 @@ public class SalaryManagerServiceImpl implements SalaryManagerService {
             return salaryView;
         }).collect(Collectors.toList());
         ResponseView responseView = ResponseView.buildSuccess(collect);
+        return responseView;
+    }
+
+    @Override
+    public ResponseView findUserCustomSalary(SalaryManagerPageParam salaryManagerPageParam) {
+        CustomSalaryManager manager = new CustomSalaryManager();
+        manager.setYn(1);
+        manager.setUserId(salaryManagerPageParam.getUserId());
+        if (StringUtils.isBlank(salaryManagerPageParam.getDt())) {
+            throw new RuntimeException("日期错误");
+        }
+        List<UserCustomSalaryView> views = new ArrayList<>();
+        SalaryConfig salaryConfig = new SalaryConfig();
+        salaryConfig.setId(salaryManagerPageParam.getSalaryConfigId());
+        SalaryConfig salaryConfigDb = salaryConfigMapper.selectOne(salaryConfig);
+        UserCustomSalaryView salaryView = new UserCustomSalaryView();
+        salaryView.setConfigName("基本工资");
+        salaryView.setType(1);
+        salaryView.setTypeStr("基本工资");
+        salaryView.setCustomSalary(salaryConfigDb.getBaseSalary());
+        views.add(salaryView);
+        manager.setDt(salaryManagerPageParam.getDt());
+        List<CustomSalaryManager> list = customSalaryMapper.select(manager);
+        for (CustomSalaryManager customSalaryManager : list) {
+            CustomSalaryConfig config = new CustomSalaryConfig();
+            config.setId(customSalaryManager.getCustomSalaryConfigId());
+            CustomSalaryConfig customSalaryConfig = customSalaryConfigMapper.selectOne(config);
+            UserCustomSalaryView view = new UserCustomSalaryView();
+            view.setType(customSalaryConfig.getType());
+            view.setTypeStr(view.getType() == 2 ? "补贴" : "扣款");
+            view.setConfigName(view.getConfigName());
+            view.setCustomSalary(customSalaryManager.getCustomSalary());
+            view.setRemark(customSalaryManager.getRemark());
+            views.add(view);
+        }
+        views.sort(Comparator.comparingInt(UserCustomSalaryView::getType));
+        ResponseView responseView = ResponseView.buildSuccess(views);
         return responseView;
     }
 }

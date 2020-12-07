@@ -26,3 +26,12 @@ export function findUserSalary(data) {
     cType: 1
   })
 }
+
+export function findUserSalaryInfo(data) {
+  return ajax({
+    url: '/salaryManager/findUserSalaryInfo',
+    method: 'post',
+    data,
+    cType: 1
+  })
+}

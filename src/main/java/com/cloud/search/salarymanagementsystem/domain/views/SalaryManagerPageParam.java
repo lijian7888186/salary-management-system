@@ -20,4 +20,5 @@ public class SalaryManagerPageParam {
     private Long userId;
     private Long deptId;
     private String dt;
+    private Long salaryConfigId;
 }

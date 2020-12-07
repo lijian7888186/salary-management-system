@@ -11,7 +11,7 @@ const CONTENT_TYPES = {
 const checkLoginUrl = "/login/checkLogin";
 
 export function checkLoginAjax() {
-  axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? '/api' : '';
+  axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? '/api' : '/api';
   let method = 'post';
   let param = {
     url: '/login/checkLogin',
@@ -32,7 +32,7 @@ export function checkLoginAjax() {
 const pendings = [];
 
 export function ajax({method = 'post', url, data, cType = 1, responseType = ''}) {
-  axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? '/api' : '';
+  axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? '/api' : '/api';
   const key = `${method} ${url} ${JSON.stringify(data)}`;
   for (let i = 0, len = pendings.length; i < len; i++) {
     if (pendings[i] === key) {

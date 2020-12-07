@@ -12,4 +12,5 @@ import lombok.Data;
 public class CustomSalaryConfigView extends CustomSalaryConfig {
     private String userName;
     private String deptName;
+    private String typeStr;
 }

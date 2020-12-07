@@ -96,6 +96,9 @@ public class RolePermissionServiceImpl implements RolePermissionService {
         }
         List<Long> collect = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
         UserRolePermissionParam param = new UserRolePermissionParam();
+        if (url.startsWith("//")) {
+            url = url.replace("//", "/");
+        }
         param.setPermissionUrl(url);
         param.setRoleIds(collect);
         Integer count = rolePermissionMapper.findUserPermissionByUrlCount(param);

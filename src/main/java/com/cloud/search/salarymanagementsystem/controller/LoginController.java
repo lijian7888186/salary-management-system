@@ -74,6 +74,7 @@ public class LoginController {
         Cookie cookie = new Cookie(Consts.LOING_COOKIE_NAMW, string);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
+        cookie.setDomain("localhost");
         cookie.setMaxAge(60 * 60 * 75);
         cookie.setDomain(request.getServerName());
         response.addCookie(cookie);

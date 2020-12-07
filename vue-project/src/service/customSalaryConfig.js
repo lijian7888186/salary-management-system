@@ -26,4 +26,28 @@ export function deleteConfig(data) {
     cType: 1
   })
 }
+export function addUserCustomSalary(data) {
+  return ajax({
+    url: '/customSalaryConfig/addUserCustomSalary',
+    method: 'post',
+    data,
+    cType: 1
+  })
+}
+export function deleteUserCustomSalary(data) {
+  return ajax({
+    url: '/customSalaryConfig/deleteUserCustomSalary',
+    method: 'post',
+    data,
+    cType: 1
+  })
+}
+export function findUserCustomSalaryList(data) {
+  return ajax({
+    url: '/customSalaryConfig/findUserCustomSalaryList',
+    method: 'post',
+    data,
+    cType: 1
+  })
+}
 

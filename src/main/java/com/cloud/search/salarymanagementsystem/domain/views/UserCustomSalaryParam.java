@@ -4,8 +4,6 @@ import com.cloud.search.salarymanagementsystem.domain.DeleteGroups;
 import com.cloud.search.salarymanagementsystem.domain.InsertGroups;
 import lombok.Data;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -16,17 +14,21 @@ import java.math.BigDecimal;
  * @desc
  */
 @Data
-public class SalaryConfigParam {
+public class UserCustomSalaryParam {
     @NotNull(groups = DeleteGroups.class)
     private Long id;
 
     @NotNull(groups = InsertGroups.class)
-    private String customSalaryName;
+    private Long userId;
+
+    @NotNull(groups = InsertGroups.class)
+    private Long customSalaryConfigId;
+
+    @NotNull(groups = InsertGroups.class)
+    private String dt;
+
+    @NotNull(groups = InsertGroups.class)
+    private BigDecimal customSalary;
 
     private String remark;
-
-    private Integer type;
-
-    private BigDecimal salary;
-
 }

@@ -38,6 +38,11 @@ public class CustomSalaryConfig implements Serializable {
     private String remark;
 
     /**
+     * 类型
+     */
+    private Integer type;
+
+    /**
     * 添加时间
     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

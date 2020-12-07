@@ -42,4 +42,11 @@ public class SalaryManagerController {
         return responseView;
     }
 
+    @PostMapping("findUserSalaryInfo")
+    @ApiOperation(value = "查询用户工资详情")
+    public ResponseView findUserSalaryInfo(@RequestBody SalaryManagerPageParam salaryManagerPageParam) {
+        ResponseView responseView = salaryManagerService.findUserCustomSalary(salaryManagerPageParam);
+        return responseView;
+    }
+
 }

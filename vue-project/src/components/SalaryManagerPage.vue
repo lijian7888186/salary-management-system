@@ -32,6 +32,13 @@
         </el-table-column>
         <el-table-column prop="salary" label="工资">
         </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作">
+          <template slot-scope="scope">
+            <el-button @click="handleClick(scope.row, 1)" type="text" size="small">查看详情</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-main>
     <el-pagination
@@ -42,10 +49,27 @@
       :total="total">
     </el-pagination>
 
+
+    <el-dialog title="用户工资详情" :visible.sync="dialogFormVisible">
+      <el-table :data="infoForm">
+        <el-table-column prop="typeStr" label="类型" width="200">
+        </el-table-column>
+        <el-table-column prop="configName" label="项目名称" width="200">
+        </el-table-column>
+        <el-table-column prop="customSalary" label="金额" width="200">
+        </el-table-column>
+        <el-table-column prop="remark" label="说明" width="200">
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
   </el-container>
 </template>
 <script>
-  import {findList, findDtList} from "@/service/salaryManager";
+  import {findList, findDtList, findUserSalaryInfo} from "@/service/salaryManager";
   import {Message} from 'element-ui';
 
   export default {
@@ -60,7 +84,10 @@
         },
         tableData: [],
         dtOptions: [],
-        total: 0
+        total: 0,
+        dialogFormVisible: false,
+        infoForm: [],
+        userId:''
       };
     },
     beforeCreate() {
@@ -111,7 +138,23 @@
       onSubmit() {
         this.listQuery.page = 1;
         this.getList();
-      }
+      },
+      handleClick(val, type) {
+        console.log(val, type);
+        if (type == 1) {
+          this.userId = val.userId
+          this.infoForm = [];
+          this.findUserList(val);
+          this.dialogFormVisible = true;
+        }
+      },
+      findUserList(val) {
+        findUserSalaryInfo(val).then((data) => {
+          if (data.code == 200) {
+            this.infoForm = data.data;
+          }
+        });
+      },
     }
   }
 </script>

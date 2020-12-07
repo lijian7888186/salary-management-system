@@ -12,4 +12,5 @@ public interface SalaryManagerService {
     ResponseView findByPage(SalaryManagerPageParam salaryManagerPageParam);
     ResponseView addSalary(String dt);
     ResponseView findUserSalary();
+    ResponseView findUserCustomSalary(SalaryManagerPageParam salaryManagerPageParam);
 }
